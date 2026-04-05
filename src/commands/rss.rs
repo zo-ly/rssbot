@@ -42,9 +42,9 @@ pub async fn rss(
         });
         format_large_msg(tr!("subscription_list").to_string(), &feeds, |feed| {
             format!(
-                "<a href=\"{}\">{}</a>",
-                Escape(&feed.link),
-                Escape(&feed.title)
+                "<b>{}</b> <code>{}</code>",
+                Escape(&feed.title),
+                Escape(&feed.link)
             )
         })
     } else {
