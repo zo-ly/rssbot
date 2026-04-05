@@ -40,9 +40,9 @@ pub async fn rss(
                 })
                 .collect::<Vec<Either<char, &str>>>()
         });
-        format_large_msg(tr!("subscription_list").to_string(), &feeds, |feed| {
+        format_large_msg(format!("订阅列表 ({}):", feeds.len()), &feeds, |feed| {
             format!(
-                "<b>{}</b> <code>{}</code>",
+                "[<b>{}</b>] <code>{}</code>",
                 Escape(&feed.title),
                 Escape(&feed.link)
             )
