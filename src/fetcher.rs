@@ -96,6 +96,21 @@ async fn fetch_and_push_updates(
     for update in updates {
         match update {
             FeedUpdate::Items(items) => {
+                if items.len() == 1 {
+                    let item = &items[0];
+                    let title = item.title.as_deref().unwrap_or_else(|| &feed.title);
+                    let link = item.link.as_deref().unwrap_or_else(|| &feed.link);
+                    let msg = format!("{}\n{}", title, link);
+                    push_updates(
+                        &bot,
+                        &db,
+                        feed.subscribers.iter().copied(),
+                        parameters::Text::new(msg),
+                    )
+                    .await?;
+                    continue;
+                }
+
                 let msgs =
                     format_large_msg(format!("<b>{}</b>", Escape(&feed.title)), &items, |item| {
                         let title = item.title.as_deref().unwrap_or_else(|| &feed.title);
