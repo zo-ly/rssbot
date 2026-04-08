@@ -14,19 +14,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        fetch-depth: 100
+        fetch-depth: 0
         submodules: true
     - name: Fetch all tags
-      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      run: git fetch --tags --force
     - name: Generate Changelog
       id: changelog
       run: |
-        prev_tag=$(git describe --abbrev=0 --tags ${{ github.ref }}^)
-        log=$(git log --oneline --decorate=no $prev_tag..${{ github.ref }})
+        current_tag="${GITHUB_REF_NAME}"
+        prev_tag=$(git tag --sort=-v:refname | grep -Fxv "$current_tag" | head -n1)
+        if [ -n "$prev_tag" ]; then
+          log=$(git log --oneline --decorate=no "$prev_tag..$current_tag")
+        else
+          log=$(git log --oneline --decorate=no "$current_tag")
+        fi
         log="${log//'%'/'%25'}"
         log="${log//$'\n'/'%0A'}"
         log="${log//$'\r'/'%0D'}"
-        echo "::set-output name=value::$log"
+        echo "value=$log" >> "$GITHUB_OUTPUT"
     - name: Create Release
       id: create-release
       uses: actions/create-release@v1
