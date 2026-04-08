@@ -105,7 +105,7 @@ async fn fetch_and_push_updates(
                         &bot,
                         &db,
                         feed.subscribers.iter().copied(),
-                        parameters::Text::new(msg),
+                        parameters::Text::with_plain(&msg),
                     )
                     .await?;
                     continue;
