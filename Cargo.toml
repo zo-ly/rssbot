@@ -1,6 +1,6 @@
 [package]
 name = "rssbot"
-version = "2.3.2"
+version = "2.3.3"
 authors = ["iovxw <iovxw@outlook.com>"]
 edition = "2021"
 
